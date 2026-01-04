@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Arquitecturas de Aprendizaje Adaptativo</title>
+    <!-- Librería para generar PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary: #2C3E50;
+            --secondary: #E67E22;
+            --accent: #27AE60;
+            --background: #FDFBF7;
+            --text: #34495E;
+            --card-bg: #FFFFFF;
+            --border-radius: 12px;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Merriweather:wght@300;700&display=swap');
+
+        body {
+            font-family: 'Lato', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--background);
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Merriweather', serif;
+            color: var(--primary);
+        }
+
+        /* --- Header & Hero --- */
+        header {
+            background: linear-gradient(135deg, var(--primary), #34495E);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        .tagline {
+            display: inline-block;
+            background: var(--secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: bold;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* --- Navigation --- */
+        nav {
+            background: white;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* --- Main Layout --- */
+        main {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 100px;
+        }
+
+        .section-title {
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+
+        /* --- Cards & Grid --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--accent);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+
+        .highlight-box {
+            background: #E8F6F3;
+            border-left: 4px solid #1ABC9C;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box {
+            background: #FDEDEC;
+            border-left: 4px solid #E74C3C;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* --- Toolkit Styles --- */
+        .tool-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-right: 0.5rem;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+            counter-reset: my-counter;
+        }
+
+        .step-list li {
+            position: relative;
+            padding-left: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-list li::before {
+            counter-increment: my-counter;
+            content: counter(my-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2rem;
+            height: 2rem;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 2rem;
+            font-weight: bold;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-top: 4rem;
+        }
+
+        /* --- Action Buttons --- */
+        .fab-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 2000;
+        }
+
+        .action-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+            background: #d35400;
+        }
+
+        .action-btn i {
+            pointer-events: none;
+        }
+
+        .tooltip {
+            position: absolute;
+            right: 70px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .action-btn:hover + .tooltip {
+            opacity: 1;
+        }
+
+        /* --- PDF & Print Specifics --- */
+        /* Esta clase se usa cuando html2pdf está generando el PDF */
+        .pdf-mode {
+            background: white !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+        }
+        
+        .pdf-mode nav, .pdf-mode .fab-container, .pdf-mode .no-print {
+            display: none !important;
+        }
+
+        .pdf-mode .card {
+            box-shadow: none !important;
+            border: 1px solid #eee !important;
+            page-break-inside: avoid !important;
+        }
+
+        @media print {
+            .no-print, nav, .fab-container {
+                display: none !important;
+            }
+            body { background: white; color: black; }
+            .card { break-inside: avoid; border: 1px solid #ccc; box-shadow: none; }
+        }
+    </style>
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body id="content-to-print">
+
+<!-- Navigation -->
+<nav class="no-print">
+    <a href="#intro">Inicio</a>
+    <a href="#neurociencia">El Cerebro Joven</a>
+    <a href="#contexto">Contexto LATAM</a>
+    <a href="#metodologias">Sistemas Educativos</a>
+    <a href="#herramientas">Caja de Herramientas</a>
+</nav>
+
+<!-- Header -->
+<header id="intro">
+    <div class="tagline">Para Niñez y Juventud (10-24 Años)</div>
+    <h1>Arquitecturas de Aprendizaje Adaptativo</h1>
+    <p>Un manual integral para transformar la educación en América Latina: Neurociencia, Contexto Social y Herramientas Prácticas.</p>
+</header>
+
+<main>
+
+    <!-- Executive Summary -->
+    <section>
+        <div class="highlight-box">
+            <h3>🎯 Objetivo del Manual</h3>
+            <p>Este documento es una brújula para educadores, padres, líderes y profesionales. Propone transitar de una enseñanza pasiva a un <strong>aprendizaje adaptativo</strong>, aprovechando la "segunda ventana de oportunidad" del cerebro adolescente y respetando la riqueza cultural de nuestra región.</p>
+        </div>
+    </section>
+
+    <!-- Part I: Neuroscience -->
+    <section id="neurociencia">
+        <h2 class="section-title"><i class="fas fa-brain"></i> El Paisaje Neuro-Evolutivo</h2>
+        <p>Olvidemos la idea de que el desarrollo termina en la infancia. Entre los 10 y los 24 años, el cerebro experimenta una remodelación profunda.</p>
+        
+        <div class="grid">
+            <div class="card">
+                <h3><i class="fas fa-random"></i> Plasticidad Extendida</h3>
+                <p>Las áreas responsables del juicio y la planificación (Corteza Prefrontal) no maduran hasta los 25 años. Esto significa que la juventud es una etapa de <strong>vulnerabilidad</strong> pero también de inmensa <strong>oportunidad</strong> para aprender y cambiar.</p>
+            </div>
+            <div class="card">
+                <h3><i class="fas fa-users"></i> Cerebro Social</h3>
+                <p>El cerebro adolescente está biológicamente programado para la conexión social. El aprendizaje que aísla falla; el aprendizaje que conecta con pares y comunidad prospera.</p>
+            </div>
+            <div class="card" style="border-left-color: #E74C3C;">
+                <h3><i class="fas fa-heartbeat"></i> El Efecto del Estrés</h3>
+                <p>La pobreza y la violencia generan "estrés tóxico" que afecta la memoria y la regulación emocional. La educación debe ser, ante todo, un espacio seguro y restaurativo.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Part II: Principles -->
+    <section id="contexto">
+        <h2 class="section-title"><i class="fas fa-compass"></i> Pilares Teóricos</h2>
+        <p>Tres conceptos fundamentales para adaptar nuestra enseñanza al contexto latinoamericano.</p>
+        
+        <div class="grid">
+            <div class="card">
+                <h3>1. Arqueorganización</h3>
+                <p><strong>El problema:</strong> Enseñar datos abstractos sin conexión.<br>
+                <strong>La solución:</strong> Enseñar a través de problemas reales (Praxeología). Primero el problema práctico (ej. conservar alimentos), luego la teoría (termodinámica).</p>
+            </div>
+            <div class="card">
+                <h3>2. Educación Popular</h3>
+                <p><strong>El problema:</strong> El estudiante como un "banco" vacío a llenar.<br>
+                <strong>La solución:</strong> El estudiante como protagonista. Aprendizaje dialógico donde "nadie enseña a nadie, aprendemos en comunidad" (Freire).</p>
+            </div>
+            <div class="card">
+                <h3>3. Diseño Universal (DUA)</h3>
+                <p><strong>El problema:</strong> Una talla única para todos.<br>
+                <strong>La solución:</strong> Múltiples formas de presentar la info (audio, visual, texto) y múltiples formas de evaluar (proyectos, oral, escrito).</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Part III: Methodologies (The Manual Core) -->
+    <section id="metodologias">
+        <h2 class="section-title"><i class="fas fa-cogs"></i> Sistemas y Metodologías</h2>
+        <p>Selecciona el sistema que mejor se adapte a tu contexto (rural, urbano, con o sin tecnología).</p>
+
+        <!-- System A -->
+        <div class="card" style="margin-bottom: 2rem; border-left: 8px solid #3498DB;">
+            <span class="tool-badge">Ideal para Rural / Sin Internet</span>
+            <h3>Sistema A: Adaptación "Escuela Nueva"</h3>
+            <p>Basado en el éxito colombiano. Transforma al docente de "conferencista" a "guía".</p>
+            <div style="background: #F4F6F7; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                <strong>🛠 La Estructura ABCD (Para crear guías):</strong>
+                <ul class="step-list">
+                    <li><strong>A - Vivencias:</strong> Conectar con lo que el joven ya sabe (saberes previos).</li>
+                    <li><strong>B - Fundamentación:</strong> La nueva teoría explicada de forma sencilla.</li>
+                    <li><strong>C - Ejercitación:</strong> Práctica controlada del nuevo concepto.</li>
+                    <li><strong>D - Aplicación:</strong> Usar lo aprendido para resolver un problema real en la comunidad.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- System B -->
+        <div class="card" style="margin-bottom: 2rem; border-left: 8px solid #9B59B6;">
+            <span class="tool-badge">Ideal para Aulas Apáticas</span>
+            <h3>Sistema B: Gamificación Analógica</h3>
+            <p>Usar mecánicas de videojuegos sin necesidad de pantallas para motivar.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;">
+                <div style="flex: 1; min-width: 200px;">
+                    <h4>🎮 Sistema de XP</h4>
+                    <p>En lugar de calificar del 0 al 10, los alumnos comienzan con 0 y ganan <strong>Puntos de Experiencia (XP)</strong> por cumplir misiones. ¡Suben de nivel (Novato -> Maestro)!</p>
+                </div>
+                <div style="flex: 1; min-width: 200px;">
+                    <h4>💰 Economía de Aula</h4>
+                    <p>Crear una moneda física (ej. "Pesos del Saber"). Los alumnos pagan por privilegios o ganan "salario" asumiendo roles (ej. Gerente de Materiales).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- System C -->
+        <div class="card" style="border-left: 8px solid #E67E22;">
+            <span class="tool-badge">Ideal para Comunidades Indígenas / Cívicas</span>
+            <h3>Sistema C: La Minga Educativa (ABP)</h3>
+            <p>Reclamando el concepto de trabajo colectivo. El aprendizaje se basa en proyectos de servicio.</p>
+            <p><strong>El Ciclo:</strong> Convocatoria (identificar problema) -> Diálogo de Saberes (consultar ancianos/expertos) -> Trabajo Colectivo (acción) -> Celebración.</p>
+        </div>
+
+    </section>
+
+    <!-- Part IV: Practical Toolkit -->
+    <section id="herramientas">
+        <h2 class="section-title"><i class="fas fa-toolbox"></i> Kit de Herramientas Prácticas</h2>
+        <p>Recursos rápidos para situaciones cotidianas.</p>
+
+        <div class="grid">
+            <!-- Tool 1 -->
+            <div class="card">
+                <h3>🗣 Comunicación Asertiva</h3>
+                <p><em>Para reducir conflictos y agresividad.</em></p>
+                <div class="highlight-box" style="border-left-color: var(--primary);">
+                    <strong>La Fórmula "YO":</strong><br>
+                    "Yo siento <strong>[emoción]</strong> cuando <strong>[hecho específico]</strong> porque <strong>[consecuencia]</strong>. Necesito <strong>[petición clara]</strong>."
+                </div>
+                <p><small>Ejemplo: "Siento frustración cuando me interrumpes porque pierdo mi idea. Necesito terminar antes de que hables."</small></p>
+            </div>
+
+            <!-- Tool 2 -->
+            <div class="card">
+                <h3>🚀 El Reto "Up-Goer Five"</h3>
+                <p><em>Para democratizar la ciencia y la información compleja.</em></p>
+                <p>Desafía a los estudiantes (o a ti mismo) a explicar un concepto complejo usando solo las <strong>1,000 palabras más comunes</strong> del idioma.</p>
+                <p><strong>Resultado:</strong> Comprensión profunda vs. memorización de jerga.</p>
+            </div>
+
+            <!-- Tool 3 -->
+            <div class="card">
+                <h3>🔥 Círculos Restaurativos</h3>
+                <p><em>Para gestionar el conflicto en el aula/grupo.</em></p>
+                <ol style="padding-left: 1.2rem;">
+                    <li>Sentarse en círculo (sin mesas).</li>
+                    <li>Usar una "Pieza de Habla" (solo habla quien la tiene).</li>
+                    <li><strong>Ronda 1:</strong> ¿Cómo te sientes?</li>
+                    <li><strong>Ronda 2:</strong> ¿Qué pasó y cómo te afectó?</li>
+                    <li><strong>Ronda 3:</strong> ¿Qué necesitamos hacer para reparar el daño?</li>
+                </ol>
+            </div>
+
+            <!-- Tool 4 -->
+            <div class="card">
+                <h3>💻 El Aula Ágil (Squads)</h3>
+                <p><em>Para formación técnica y preparación laboral (16+ años).</em></p>
+                <p>Adoptar rituales de la industria tech:</p>
+                <ul>
+                    <li><strong>Dailies:</strong> Reunión de 15 min de pie al inicio. ¿Qué hice ayer? ¿Qué haré hoy? ¿Qué me bloquea?</li>
+                    <li><strong>Retrospectivas:</strong> Reflexión semanal de mejora continua.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="no-print" style="text-align: center; margin-top: 4rem;">
+        <div class="highlight-box">
+            <h3>📥 ¿Cómo usar este manual?</h3>
+            <p>Este documento es una herramienta viva. No intentes aplicar todo a la vez.</p>
+            <p>1. <strong>Diagnostica:</strong> ¿Tu grupo necesita motivación (Gamificación) o estructura (Escuela Nueva)?<br>
+            2. <strong>Adapta:</strong> Modifica los ejemplos a tu cultura local.<br>
+            3. <strong>Descarga:</strong> Usa el botón flotante para crear un PDF y llevar este conocimiento a zonas sin conexión.</p>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <p>© 2025 Iniciativa de la Asociación Latinoamericana Ímpetu</p>
+    <p style="font-size: 0.9rem; opacity: 0.8;">Basado en investigaciones sobre neurociencia, pobreza y educación popular.</p>
+</footer>
+
+<!-- Floating Action Buttons -->
+<div class="fab-container">
+    <div>
+        <button class="action-btn" onclick="generatePDF()" id="pdf-btn">
+            <i class="fas fa-file-pdf"></i>
+        </button>
+        <div class="tooltip">Descargar PDF</div>
+    </div>
+</div>
+
+<script>
+    function generatePDF() {
+        const element = document.getElementById('content-to-print');
+        const btn = document.getElementById('pdf-btn');
+        
+        // Feedback visual
+        const originalIcon = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        
+        // Opciones para html2pdf
+        const opt = {
+            margin:       [0.5, 0.5, 0.5, 0.5], // Margenes en pulgadas
+            filename:     'Manual_Educativo_LATAM.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true }, // Escala 2 mejora la calidad
+            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+
+        // Añadir clase temporal para ajustar estilos
+        document.body.classList.add('pdf-mode');
+
+        // Generar y descargar
+        html2pdf().set(opt).from(element).save().then(() => {
+            // Restaurar botón y estilos
+            btn.innerHTML = originalIcon;
+            document.body.classList.remove('pdf-mode');
+        }).catch(err => {
+            console.error(err);
+            alert("Hubo un error al generar el PDF. Por favor intenta imprimir usando Ctrl+P.");
+            btn.innerHTML = originalIcon;
+            document.body.classList.remove('pdf-mode');
+        });
+    }
+</script>
+
+</body>
+</html>
